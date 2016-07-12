@@ -3,7 +3,9 @@ package com.alorma.github.ui.activity.login;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import com.alorma.github.AccountsHelper;
 import com.alorma.github.BuildConfig;
 import com.alorma.github.R;
@@ -16,6 +18,7 @@ import com.alorma.github.sdk.services.user.TwoFactorAppException;
 import com.alorma.github.sdk.services.user.TwoFactorAuthException;
 import com.alorma.github.sdk.services.user.UnauthorizedException;
 import com.alorma.gitskarios.core.Pair;
+import com.alorma.gitskarios.core.client.UrlProvider;
 import java.lang.ref.WeakReference;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,6 +48,7 @@ public class WelcomePresenter {
   }
 
   private void createAuthorization(String otpCode) {
+    UrlProvider.setUrlProviderInstance(null);
     CreateAuthorization createRequest = new CreateAuthorization();
     createRequest.note = "gitskarios";
     createRequest.scopes = new String[] {
@@ -127,15 +131,33 @@ public class WelcomePresenter {
       userData.putString(AccountManager.KEY_AUTHTOKEN, accessToken);
 
       AccountManager accountManager = AccountManager.get(accountAuthenticatorActivity.get());
-      accountManager.addAccountExplicitly(account, null, userData);
-      accountManager.setAuthToken(account, accountAuthenticatorActivity.get().getString(R.string.account_type), accessToken);
+      boolean addAccountResult = addAccount(account, userData, accountManager);
 
-      Bundle result = new Bundle();
-      result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-      result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-      result.putString(AccountManager.KEY_AUTHTOKEN, accessToken);
-      accountAuthenticatorActivity.get().setAccountAuthenticatorResult(result);
-      welcomePresenterViewInterface.finishAccess(user);
+      if (!addAccountResult) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+          accountManager.removeAccount(account, accountAuthenticatorActivity.get(), accountManagerFuture -> {}, new Handler());
+        } else {
+          accountManager.removeAccount(account, accountManagerFuture -> {}, new Handler());
+        }
+      }
+
+      addAccountResult = addAccount(account, userData, accountManager);
+      if (addAccountResult) {
+        accountManager.setAuthToken(account, accountAuthenticatorActivity.get().getString(R.string.account_type), accessToken);
+
+        Bundle result = new Bundle();
+        result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
+        result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
+        result.putString(AccountManager.KEY_AUTHTOKEN, accessToken);
+        accountAuthenticatorActivity.get().setAccountAuthenticatorResult(result);
+        welcomePresenterViewInterface.finishAccess(user);
+      } else {
+        welcomePresenterViewInterface.onGenericError();
+      }
     }
+  }
+
+  private boolean addAccount(Account account, Bundle userData, AccountManager accountManager) {
+    return accountManager.addAccountExplicitly(account, null, userData);
   }
 }

@@ -12,9 +12,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import com.alorma.github.ui.activity.login.WelcomeActivity;
 
-/**
- * Created by Bernat on 27/03/2015.
- */
 public class AccountService extends Service {
 
   private static AccountAuthenticatorImpl accountAuthenticator;

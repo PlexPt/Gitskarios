@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements AccountHeader.OnAccoun
         }
 
         AccountsManager accountsFragment = new AccountsManager();
-        List<Account> accounts = accountsFragment.getAccounts(this);
+        List<Account> accounts = accountsFragment.getAccounts(getApplicationContext());
 
         if (accounts.isEmpty()) {
             Intent intent = new Intent(this, WelcomeActivity.class);

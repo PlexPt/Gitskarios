@@ -3,19 +3,14 @@ package com.alorma.github.ui.activity.login;
 import android.accounts.AccountAuthenticatorActivity;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -175,6 +170,15 @@ public class WelcomeActivity extends AccountAuthenticatorActivity implements Wel
           welcomePresenter.setOtpCode(code);
         }
       }
+    }
+  }
+
+  @Override
+  protected void onNewIntent(Intent intent) {
+    super.onNewIntent(intent);
+    String code = intent.getStringExtra(OtpCodeActivity.EXTRA_MESSAGE);
+    if (code != null) {
+      welcomePresenter.setOtpCode(code);
     }
   }
 
