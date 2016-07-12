@@ -5,16 +5,23 @@ import com.alorma.github.injector.PerActivity;
 import com.alorma.github.sdk.core.datasource.CacheDataSource;
 import com.alorma.github.sdk.core.datasource.CloudDataSource;
 import com.alorma.github.sdk.core.datasource.RestWrapper;
+import com.alorma.github.sdk.core.datasource.SdkItem;
 import com.alorma.github.sdk.core.repositories.CloudStarredRepositoriesDataSource;
 import com.alorma.github.sdk.core.repositories.Repo;
 import java.util.List;
 import javax.inject.Inject;
+import rx.Observable;
 
 @PerActivity public class AuthStarredRepositoriesPresenter extends RepositoriesPresenter {
 
   @Inject
   public AuthStarredRepositoriesPresenter() {
     super();
+  }
+
+  @Override
+  Observable<SdkItem<List<Repo>>> getFallbackApi() {
+    return null;
   }
 
   @NonNull

@@ -40,11 +40,10 @@ public abstract class RepositoriesPresenter extends Presenter<String, List<Repo>
     }
   }
 
-  private void execute(Observable<SdkItem<List<Repo>>> observable,
-      Callback<List<Repo>> listCallback, boolean firstTime) {
-    observable
-        .timeout(20, TimeUnit.SECONDS)
-        .retry(3).subscribeOn(Schedulers.newThread())
+  private void execute(Observable<SdkItem<List<Repo>>> observable, Callback<List<Repo>> listCallback, boolean firstTime) {
+    observable.timeout(20, TimeUnit.SECONDS)
+        .retry(3)
+        .subscribeOn(Schedulers.newThread())
         .map(sdkResponseObservable -> {
           if (sdkResponseObservable.getPage() != null && sdkResponseObservable.getPage() > 0) {
             this.page = sdkResponseObservable.getPage();
@@ -76,11 +75,18 @@ public abstract class RepositoriesPresenter extends Presenter<String, List<Repo>
   @Override
   protected GenericRepository<String, List<Repo>> configRepository(RestWrapper restWrapper) {
     if (genericRepository == null) {
-      genericRepository = new GenericRepository<>(getUserReposCacheDataSource(),
-          getCloudRepositoriesDataSource(restWrapper, sortOrder));
+      genericRepository =
+          new GenericRepository<String, List<Repo>>(getUserReposCacheDataSource(), getCloudRepositoriesDataSource(restWrapper, sortOrder)) {
+            @Override
+            protected Observable<SdkItem<List<Repo>>> fallbackApi() {
+              return getFallbackApi();
+            }
+          };
     }
     return genericRepository;
   }
+
+  abstract Observable<SdkItem<List<Repo>>> getFallbackApi();
 
   @NonNull
   @Override
@@ -90,6 +96,5 @@ public abstract class RepositoriesPresenter extends Presenter<String, List<Repo>
 
   protected abstract CacheDataSource<String, List<Repo>> getUserReposCacheDataSource();
 
-  protected abstract CloudDataSource<String, List<Repo>> getCloudRepositoriesDataSource(
-      RestWrapper reposRetrofit, String sortOrder);
+  protected abstract CloudDataSource<String, List<Repo>> getCloudRepositoriesDataSource(RestWrapper reposRetrofit, String sortOrder);
 }
