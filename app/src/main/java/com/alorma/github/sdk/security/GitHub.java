@@ -2,9 +2,6 @@ package com.alorma.github.sdk.security;
 
 import com.alorma.gitskarios.core.ApiClient;
 
-/**
- * Created by Bernat on 08/07/2014.
- */
 public class GitHub implements ApiClient {
 
   private String hostname;
@@ -37,7 +34,7 @@ public class GitHub implements ApiClient {
         hostname = hostname + "/";
       }
 
-      hostname = hostname + "api/v3/";
+      hostname = hostname + "api/v3";
     }
 
     return hostname;

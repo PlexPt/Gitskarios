@@ -19,25 +19,28 @@ import org.ocpsoft.prettytime.units.Year;
 public class TimeUtils {
 
   public static String getDateToText(Context context, Date date, int resId) {
-    SimpleDateFormat sdf =
-        new SimpleDateFormat(context.getString(R.string.at_date_format), Locale.getDefault());
+    SimpleDateFormat sdf = new SimpleDateFormat(context.getString(R.string.at_date_format), Locale.getDefault());
 
     return context.getString(resId, sdf.format(date));
   }
 
   public static String getTimeAgoString(String date) {
-    DateTimeFormatter formatter =
-        DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(DateTimeZone.UTC);
+    try {
+      DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'").withZone(DateTimeZone.UTC);
 
-    DateTime dt = formatter.parseDateTime(date);
-    PrettyTime p = new PrettyTime();
+      DateTime dt = formatter.parseDateTime(date);
+      PrettyTime p = new PrettyTime();
 
-    p.removeUnit(Millennium.class);
-    p.removeUnit(Century.class);
-    p.removeUnit(Year.class);
-    p.removeUnit(Month.class);
-    p.removeUnit(Week.class);
+      p.removeUnit(Millennium.class);
+      p.removeUnit(Century.class);
+      p.removeUnit(Year.class);
+      p.removeUnit(Month.class);
+      p.removeUnit(Week.class);
 
-    return p.format(new Date(dt.getMillis()));
+      return p.format(new Date(dt.getMillis()));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return date;
+    }
   }
 }
