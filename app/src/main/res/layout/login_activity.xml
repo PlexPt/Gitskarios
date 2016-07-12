@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".ui.activity.WelcomeActivity"
+             tools:context=".ui.activity.login.WelcomeActivity"
     >
 
   <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,6 +11,7 @@
                                      android:layout_width="match_parent"
                                      android:layout_height="240dp"
                                      android:background="?colorPrimary"
+                                     android:fitsSystemWindows="true"
                                      app:contentInsetStart="@dimen/second_keyline"
                                      app:popupTheme="@style/Toolbar.Popup.AppCompat"
                                      app:theme="@style/Toolbar.AppCompat.Responsive"

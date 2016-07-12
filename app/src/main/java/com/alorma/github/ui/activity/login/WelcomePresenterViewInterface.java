@@ -1,4 +1,4 @@
-package com.alorma.github.ui.activity;
+package com.alorma.github.ui.activity.login;
 
 import com.alorma.github.sdk.bean.dto.response.User;
 

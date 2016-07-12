@@ -1,4 +1,4 @@
-package com.alorma.github.ui.activity;
+package com.alorma.github.ui.activity.login;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.app.Activity;
@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -16,14 +17,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.alorma.github.R;
 import com.alorma.github.sdk.bean.dto.response.User;
-import com.alorma.github.ui.activity.login.OtpCodeActivity;
+import com.alorma.github.ui.activity.MainActivity;
 import com.alorma.github.utils.KeyboardUtils;
 
-public class WelcomeActivity extends AccountAuthenticatorActivity
-    implements WelcomePresenterViewInterface {
+public class WelcomeActivity extends AccountAuthenticatorActivity implements WelcomePresenterViewInterface {
 
   private static final int OTP_REQUEST = 1121;
 
+  @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.openLogin) View buttonLogin;
   @Bind(R.id.login_username) TextInputLayout loginUsername;
   @Bind(R.id.login_password) TextInputLayout loginPassword;
@@ -32,12 +33,11 @@ public class WelcomeActivity extends AccountAuthenticatorActivity
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_welcome);
+    setContentView(R.layout.login_activity);
     ButterKnife.bind(this);
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-      getWindow().addFlags(
-          View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+      getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
 
     welcomePresenter = new WelcomePresenter(this);
@@ -55,10 +55,25 @@ public class WelcomeActivity extends AccountAuthenticatorActivity
         login(username, passwords);
       }
     });
+
+    toolbar.inflateMenu(R.menu.login_activity);
+    toolbar.setOnMenuItemClickListener(item -> {
+      switch (item.getItemId()) {
+        case R.id.enterpriseLogin:
+          openEnterprise();
+          break;
+      }
+      return true;
+    });
   }
 
   private void login(String username, String passwords) {
     welcomePresenter.login(username, passwords);
+  }
+
+  private void openEnterprise() {
+    Intent intent = new Intent(this, EnterpiseLoginActivity.class);
+    startActivity(intent);
   }
 
   @Override
@@ -128,9 +143,7 @@ public class WelcomeActivity extends AccountAuthenticatorActivity
   }
 
   public String getFromTextInputLayout(TextInputLayout inputLayout) {
-    if (inputLayout != null
-        && inputLayout.getEditText() != null
-        && inputLayout.getEditText().getText() != null) {
+    if (inputLayout != null && inputLayout.getEditText() != null && inputLayout.getEditText().getText() != null) {
       return inputLayout.getEditText().getText().toString();
     }
     return null;

@@ -1,4 +1,4 @@
-package com.alorma.github.ui.activity;
+package com.alorma.github.ui.activity.login;
 
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;

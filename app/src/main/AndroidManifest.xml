@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.alorma.github.ui.activity.WelcomeActivity"
+            android:name="com.alorma.github.ui.activity.login.WelcomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.Welcome"
@@ -77,6 +77,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activity.ProfileActivity" />
+        <activity android:name=".ui.activity.login.EnterpiseLoginActivity" />
         <activity android:name=".ui.activity.CommitDetailActivity"/>
         <activity
             android:name=".ui.activity.RepoDetailActivity"
