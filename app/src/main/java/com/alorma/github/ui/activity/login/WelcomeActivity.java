@@ -3,14 +3,19 @@ package com.alorma.github.ui.activity.login;
 import android.accounts.AccountAuthenticatorActivity;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -36,6 +41,8 @@ public class WelcomeActivity extends AccountAuthenticatorActivity implements Wel
     setContentView(R.layout.login_activity);
     ButterKnife.bind(this);
 
+    configureToolbarMenu();
+
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
@@ -55,7 +62,9 @@ public class WelcomeActivity extends AccountAuthenticatorActivity implements Wel
         login(username, passwords);
       }
     });
+  }
 
+  private void configureToolbarMenu() {
     toolbar.inflateMenu(R.menu.login_activity);
     toolbar.setOnMenuItemClickListener(item -> {
       switch (item.getItemId()) {
