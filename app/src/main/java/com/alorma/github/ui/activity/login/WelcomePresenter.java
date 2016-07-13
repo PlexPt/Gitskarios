@@ -17,6 +17,7 @@ import com.alorma.github.sdk.services.user.GetAuthUserClient;
 import com.alorma.github.sdk.services.user.TwoFactorAppException;
 import com.alorma.github.sdk.services.user.TwoFactorAuthException;
 import com.alorma.github.sdk.services.user.UnauthorizedException;
+import com.alorma.github.utils.AccountUtils;
 import com.alorma.gitskarios.core.Pair;
 import com.alorma.gitskarios.core.client.UrlProvider;
 import java.lang.ref.WeakReference;
@@ -126,7 +127,8 @@ public class WelcomePresenter {
 
   private void addAccount(User user, String accessToken) {
     if (accessToken != null && accountAuthenticatorActivity != null && accountAuthenticatorActivity.get() != null) {
-      Account account = new Account(user.login, accountAuthenticatorActivity.get().getString(R.string.account_type));
+      Account account = new Account(new AccountUtils().getNameForAccount(user.login),
+          accountAuthenticatorActivity.get().getString(R.string.account_type));
       Bundle userData = AccountsHelper.buildBundle(user.name, user.email, user.avatar_url);
       userData.putString(AccountManager.KEY_AUTHTOKEN, accessToken);
 
