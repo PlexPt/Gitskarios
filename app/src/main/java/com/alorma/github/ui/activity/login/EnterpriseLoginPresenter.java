@@ -10,6 +10,7 @@ import com.alorma.github.AccountsHelper;
 import com.alorma.github.R;
 import com.alorma.github.sdk.bean.dto.response.User;
 import com.alorma.github.sdk.services.user.GetAuthUserClient;
+import com.alorma.github.utils.AccountUtils;
 import com.alorma.gitskarios.core.Pair;
 import com.alorma.gitskarios.core.client.UrlProvider;
 import java.lang.ref.WeakReference;
@@ -68,7 +69,7 @@ class EnterpriseLoginPresenter {
 
   private void addAccount(User user, String accessToken) {
     if (accessToken != null && accountAuthenticatorActivity != null && accountAuthenticatorActivity.get() != null) {
-      Account account = new Account(user.login, accountAuthenticatorActivity.get().getString(R.string.account_type));
+      Account account = new Account(new AccountUtils().getNameForAccount(user.login), accountAuthenticatorActivity.get().getString(R.string.account_type));
       Bundle userData = AccountsHelper.buildBundle(user.name, user.email, user.avatar_url, domainUrl);
       userData.putString(AccountManager.KEY_AUTHTOKEN, accessToken);
 
